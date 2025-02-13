@@ -9,11 +9,9 @@ public class WordFinder
     private readonly string[] _rows;
     private readonly int _rowsInt;
     private readonly int _colsInt;
-    public static readonly int d = 256;
-    private HashSet<string> uniqueWords = new HashSet<string>();
-
-    private Dictionary<string, int> foundWords = new Dictionary<string, int>();
-    private ConcurrentDictionary<string, int> foundWordsAsync = new ConcurrentDictionary<string, int>();
+    public static readonly int d = 256; // number of characters in the input alphabet
+    private HashSet<string> uniqueWords = new HashSet<string>(); // constant lookup time, no duplicates, no order
+    private ConcurrentDictionary<string, int> foundWordsAsync = new ConcurrentDictionary<string, int>(); // thread-safe dictionary
     private List<Task> tasks = new List<Task>();
 
     public WordFinder(IEnumerable<string> matrix)
@@ -52,6 +50,12 @@ public class WordFinder
         // Separate search in rows and columns
         RowSearch();
         ColumnSearch();
+
+        // console write each finding and its count
+        foreach (var word in foundWordsAsync.OrderByDescending(x => x.Value).Take(10))
+        {
+            Console.WriteLine($"Found {word.Key} - {word.Value} times");
+        }
 
         return foundWordsAsync.OrderByDescending(x => x.Value)
                          .Take(10)
@@ -123,7 +127,6 @@ public class WordFinder
         }
     }
 
-
     private void RowSearch()
     {
         // Check all precomputed rows
@@ -149,7 +152,6 @@ public class WordFinder
         }
     }
 
-
     /// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Took the liberty to do it async as well but this is an extra to the interface that was provided in the challenge.
     /// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -167,7 +169,7 @@ public class WordFinder
 
         Task.WaitAll(tasks.ToArray());
 
-        return foundWords.OrderByDescending(x => x.Value)
+        return foundWordsAsync.OrderByDescending(x => x.Value)
                          .Take(10)
                          .Select(x => x.Key);
     }

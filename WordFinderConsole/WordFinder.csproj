@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Matrix.txt" />
     <None Remove="Matrix_10x10.txt" />
     <None Remove="Matrix_64x64.txt" />
     <None Remove="WordStream.txt" />
