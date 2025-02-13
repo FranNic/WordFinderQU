@@ -5,6 +5,15 @@ A DotNet challenge for QU
 Presented with a character matrix and a large stream of words, WordFinder Class searches the matrix to look for the words from the word stream. 
 Words are looked horizontally, from left to right, and vertically, from top to bottom. 
 
+## How to run
+From the root folder of the repository run the following command:
+
+```dotnet run --configuration Release```
+
+and to run the tests:
+
+```dotnet test```
+
 ## Preload 
 For the sake of simplicity columns are treated as rows in different variable.
 
